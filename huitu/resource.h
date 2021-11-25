@@ -86,6 +86,8 @@
 #define IDS_EDIT_MENU                   306
 #define IDD_DIALOG1                     310
 #define IDD_DIALOG2                     313
+#define IDD_DIALOG3                     317
+#define IDD_DIALOG4                     321
 #define IDC_EDITx1                      1000
 #define IDC_EDITy1                      1001
 #define IDC_EDITx2                      1002
@@ -94,6 +96,11 @@
 #define IDC_EDITr                       1005
 #define IDC_EDITx0                      1006
 #define IDC_EDITy0                      1007
+#define IDCANCEL                        1009
+#define IDC_EDIT1                       1010
+#define IDC_EDIT2                       1011
+#define IDC_EDIT3                       1012
+#define IDC_EDIT4                       1013
 #define DDA                             32771
 #define MidPointLine                    32772
 #define Bresenham                       32773
@@ -146,9 +153,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        315
+#define _APS_NEXT_RESOURCE_VALUE        323
 #define _APS_NEXT_COMMAND_VALUE         32818
-#define _APS_NEXT_CONTROL_VALUE         1008
+#define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

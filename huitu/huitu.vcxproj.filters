@@ -63,6 +63,12 @@
     <ClInclude Include="dlg_circle.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Pingyi_2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bili_2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="huitu.cpp">
@@ -102,6 +108,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="dlg_circle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Pingyi_2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bili_2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

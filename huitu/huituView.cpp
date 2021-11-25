@@ -15,6 +15,9 @@
 #include "huituView.h"
 #include "dlg_line.h"
 #include "dlg_circle.h"
+#include "Pingyi_2.h"
+#include "bili_2.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -630,16 +633,16 @@ void ChuituView::OnPolygonfloodfill4()
 	// TODO: 在此添加命令处理程序代码
 	CClientDC dc1(this);
 	
-	for (int i = 0; i <= 60; i++)
+	for (int i = 0; i <= 50; i++)
 	{
 		dc1.SetPixel(0, i, 200);
 	}
-	for (int i = 0; i <= 60; i++)
+	for (int i = 0; i <= 50; i++)
 		dc1.SetPixel(i, 0, 200);
-	for (int i = 0; i <= 60; i++)
-		dc1.SetPixel(i, 60, 200);
-	for (int i = 0; i <= 60; i++)
-		dc1.SetPixel(60, i, 200);
+	for (int i = 0; i <= 50; i++)
+		dc1.SetPixel(i, 50, 200);
+	for (int i = 0; i <= 50; i++)
+		dc1.SetPixel(50, i, 200);
 
 	FloodFill4(20, 20, 200, 100);
 }
@@ -719,23 +722,46 @@ void ChuituView::Onpingyi2()
 	// TODO: 在此添加命令处理程序代码
 	CClientDC dc(this);
 	CRect rect;
-	GetClientRect(&rect);//返回的是设备坐标，而SetViewportOrg需要的也是设备坐标，故此处不用转换
-	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
-	int Tx = 100, Ty = 200;//x平移100，y平移200
-	int a[4][2] = { 0, 0, 100, 0, 100, 100, 0, 0 };//确定三角形的形状
+	GetClientRect(&rect);
+	
+	// 画坐标轴
+	dc.MoveTo(0, rect.Height() / 2);
+	dc.LineTo(rect.Width(), rect.Height() / 2);
+	dc.MoveTo(rect.Width() / 2, 0);
+	dc.LineTo(rect.Width() / 2, rect.Height());
+
+	//移动坐标原点到客户区中心
+	dc.SetMapMode(MM_ISOTROPIC);
+	dc.SetViewportExt(rect.right, rect.bottom);
+	dc.SetViewportOrg(rect.right / 2, rect.bottom / 2);
+	dc.SetWindowOrg(0, 0);
+	dc.SetWindowExt(1000, -1000);
+	CPen pen1;
+	pen1.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
+	dc.SelectObject(&pen1);
+	Pingyi_2 pp2;
+	pp2.DoModal();
+	int Tx =pp2.Tx, Ty = pp2.Ty;
+	dc.MoveTo(100, 0);
+	dc.LineTo(100, 1000);
+
+	dc.MoveTo(pp2.Tx, 0);
+	dc.LineTo(pp2.Tx, 1000);
+	
+	int a[6][2] = { 0, 0, 100, 0, 100, 100,0,100, 0, 0 };//确定四边形的形状
 	dc.TextOut(100, 0, (CString)"原图形");
 
-	for (int i = 0; i < 3; i++)
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
+	dc.SelectObject(&pen);
+	for (int i = 0; i < 5; i++)
 	{
 		dc.MoveTo(a[i][0], a[i][1]);
 		dc.LineTo(a[i + 1][0], a[i + 1][1]);
 	}
 
-	CPen pen;
-	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
-	dc.SelectObject(&pen);
 	dc.TextOut(100 + Tx, Ty, (CString)"平移后图形");
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		dc.MoveTo(a[i][0] + Tx, a[i][1] + Ty);
 		dc.LineTo(a[i + 1][0] + Tx, a[i + 1][1] + Ty);
@@ -749,23 +775,42 @@ void ChuituView::Onxuanzhaun2()
 	CClientDC dc(this);
 	CRect rect;
 	GetClientRect(&rect);//返回的是设备坐标，而SetViewportOrg需要的也是设备坐标，故此处不用转换
-	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
+	// 画坐标轴
+	dc.MoveTo(0, rect.Height() / 2);
+	dc.LineTo(rect.Width(), rect.Height() / 2);
+	dc.MoveTo(rect.Width() / 2, 0);
+	dc.LineTo(rect.Width() / 2, rect.Height());
+
+	//移动坐标原点到客户区中心
+	dc.SetMapMode(MM_ISOTROPIC);
+	dc.SetViewportExt(rect.right, rect.bottom);
+	dc.SetViewportOrg(rect.right / 2, rect.bottom / 2);
+	dc.SetWindowOrg(0, 0);
+	dc.SetWindowExt(1000, -1000);
+	CPen pen1;
+	pen1.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
+	dc.SelectObject(&pen1);
+	dc.MoveTo(150, 0);
+	dc.LineTo(150, 1000);
+
 	float o = 3.1415926 / 2; //旋转90度
 	float c = cos(o);
 	float s = sin(o);
 	int Tx = 300;
 	int a[4][2] = { 0, 0, 100, 0, 100, 100, 0, 0 };//确定三角形的形状
+	
+	
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));	
+	dc.SelectObject(&pen);
 	dc.TextOut(100, 0, (CString)"原图形");
-
 	for (int i = 0; i < 3; i++)
 	{
 		dc.MoveTo(a[i][0], a[i][1]);
 		dc.LineTo(a[i + 1][0], a[i + 1][1]);
 	}
 
-	CPen pen;
-	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
-	dc.SelectObject(&pen);
+	
 	dc.TextOut(100 * c + Tx, 0, (CString)"旋转后图形");
 	for (int i = 0; i < 3; i++)
 	{
@@ -781,21 +826,39 @@ void ChuituView::Oncuoqie2()
 	CClientDC dc(this);
 	CRect rect;
 	GetClientRect(&rect);//返回的是设备坐标，而SetViewportOrg需要的也是设备坐标，故此处不用转换
-	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
+	
 	int b = 2, c = 2;
 	int Tx = 300;
 	int a[4][2] = { 0, 0, 100, 0, 100, 100, 0, 0 };//确定三角形的形状
-	dc.TextOut(100, 0, (CString)"原图形");
+	
 
+	// 画坐标轴
+	dc.MoveTo(0, rect.Height() / 2);
+	dc.LineTo(rect.Width(), rect.Height() / 2);
+	dc.MoveTo(rect.Width() / 2, 0);
+	dc.LineTo(rect.Width() / 2, rect.Height());
+
+	//移动坐标原点到客户区中心
+	dc.SetMapMode(MM_ISOTROPIC);
+	dc.SetViewportExt(rect.right, rect.bottom);
+	dc.SetViewportOrg(rect.right / 2, rect.bottom / 2);
+	dc.SetWindowOrg(0, 0);
+	dc.SetWindowExt(1000, -1000);
+	CPen pen1;
+	pen1.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
+	dc.SelectObject(&pen1);
+	dc.MoveTo(200, 0);
+	dc.LineTo(200, 1000);
+
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
+	dc.SelectObject(&pen);
+	dc.TextOut(100, 0, (CString)"原图形");
 	for (int i = 0; i < 3; i++)
 	{
 		dc.MoveTo(a[i][0], a[i][1]);
 		dc.LineTo(a[i + 1][0], a[i + 1][1]);
 	}
-
-	CPen pen;
-	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
-	dc.SelectObject(&pen);
 	dc.TextOut(100 + Tx, 0, (CString)"错切后图形");
 	for (int i = 0; i < 3; i++)
 	{
@@ -811,22 +874,43 @@ void ChuituView::Onbili2()
 	// TODO: 在此添加命令处理程序代码
 	CClientDC dc(this);
 	CRect rect;
-	GetClientRect(&rect);//返回的是设备坐标，而SetViewportOrg需要的也是设备坐标，故此处不用转换
-	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
-	int Tx = 300;
-	int Sx = 3, Sy = 4; //放大缩小比例
+	GetClientRect(&rect);
+	
+	bili_2 bb;
+	bb.DoModal();
+	int Tx = bb.Tx;
+	int Sx = bb.Sx, Sy = bb.Sy; //放大缩小比例
 	int a[4][2] = { 0, 0, 100, 0, 100, 100, 0, 0 };//确定三角形的形状
-	dc.TextOut(100, 0, (CString)"原图形");
+	
+	
+	// 画坐标轴
+	dc.MoveTo(0, rect.Height() / 2);
+	dc.LineTo(rect.Width(), rect.Height() / 2);
+	dc.MoveTo(rect.Width() / 2, 0);
+	dc.LineTo(rect.Width() / 2, rect.Height());
 
+	//移动坐标原点到客户区中心
+	dc.SetMapMode(MM_ISOTROPIC);
+	dc.SetViewportExt(rect.right, rect.bottom);
+	dc.SetViewportOrg(rect.right / 2, rect.bottom / 2);
+	dc.SetWindowOrg(0, 0);
+	dc.SetWindowExt(1000, -1000);
+	CPen pen1;
+	pen1.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
+	dc.SelectObject(&pen1);
+	dc.MoveTo(Tx, 0);
+	dc.LineTo(Tx, 1000);
+
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
+	dc.SelectObject(&pen);
+	dc.TextOut(100, 0, (CString)"原图形");
 	for (int i = 0; i < 3; i++)
 	{
 		dc.MoveTo(a[i][0], a[i][1]);
 		dc.LineTo(a[i + 1][0], a[i + 1][1]);
 	}
 
-	CPen pen;
-	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
-	dc.SelectObject(&pen);
 	dc.TextOut(100 + Tx, 0, (CString)"比例变换后图形");
 	for (int i = 0; i < 3; i++)
 	{
@@ -842,8 +926,29 @@ void ChuituView::Onduichen2()
 	CClientDC dc(this);
 	CRect rect;
 	GetClientRect(&rect);//返回的是设备坐标，而SetViewportOrg需要的也是设备坐标，故此处不用转换
-	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
+	
 	int a[4][2] = { 0, 0, 100, 0, 100, 100, 0, 0 };//确定三角形的形状
+	
+	// 画坐标轴
+	dc.MoveTo(0, rect.Height() / 2);
+	dc.LineTo(rect.Width(), rect.Height() / 2);
+	dc.MoveTo(rect.Width() / 2, 0);
+	dc.LineTo(rect.Width() / 2, rect.Height());
+
+	//移动坐标原点到客户区中心
+	dc.SetMapMode(MM_ISOTROPIC);
+	dc.SetViewportExt(rect.right, rect.bottom);
+	dc.SetViewportOrg(rect.right / 2, rect.bottom / 2);
+	dc.SetWindowOrg(0, 0);
+	dc.SetWindowExt(1000, -1000);
+	CPen pen1;
+	pen1.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
+	dc.SelectObject(&pen1);
+
+
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
+	dc.SelectObject(&pen);
 	dc.TextOut(100, 0, (CString)"原图形");
 
 	for (int i = 0; i < 3; i++)
@@ -852,9 +957,6 @@ void ChuituView::Onduichen2()
 		dc.LineTo(a[i + 1][0], a[i + 1][1]);
 	}
 
-	CPen pen;
-	pen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
-	dc.SelectObject(&pen);
 	dc.TextOut(-100, -0, (CString)"对称后图形");
 	for (int i = 0; i < 3; i++)
 	{
@@ -1054,6 +1156,26 @@ void ChuituView::Onpingyi3()
 {
 	// TODO: 在此添加命令处理程序代码
 	CClientDC dc(this);
+	CRect rect;
+	GetClientRect(&rect);
+	dc.SetMapMode(MM_ANISOTROPIC);//设置映射模式
+	dc.SetWindowExt(rect.Width(), rect.Height());//设置窗口范围
+	dc.SetViewportExt(rect.Width(), -rect.Height());//设置窗视区范围
+	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);//设置客户区中心为坐标轴（视区）原点
+	rect.OffsetRect(-rect.Width() / 2, -rect.Height() / 2);//客户区矩形矫正
+	dc.MoveTo(0, 0); dc.LineTo(500, 0);//{画出坐标轴}
+	dc.MoveTo(0, 0); dc.LineTo(0, 300);
+	dc.MoveTo(0, 0); dc.LineTo(-250, -250);
+	dc.MoveTo(-10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(485, 10); dc.LineTo(500, 0);
+	dc.MoveTo(485, -10); dc.LineTo(500, 0);
+	dc.MoveTo(-250, -250); dc.LineTo(-250, -230);
+	dc.MoveTo(-250, -250); dc.LineTo(-230, -250);
+
+	CPen NewPen, *P01Pen;//设置新画笔
+	NewPen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));//设置画笔属性
+	P01Pen = dc.SelectObject(&NewPen);//应用新画笔
 	CPen pen1, pen2;
 	pen1.CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 	pen2.CreatePen(PS_SOLID, 2, RGB(0, 0, 255));//粗度为2，由黑色变为蓝色
@@ -1098,6 +1220,28 @@ void ChuituView::Onxuanzhuan3()
 {
 	// TODO: 在此添加命令处理程序代码
 	CClientDC dc(this);
+	CRect rect;
+	GetClientRect(&rect);
+	dc.SetMapMode(MM_ANISOTROPIC);//设置映射模式
+	dc.SetWindowExt(rect.Width(), rect.Height());//设置窗口范围
+	dc.SetViewportExt(rect.Width(), -rect.Height());//设置窗视区范围
+	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);//设置客户区中心为坐标轴（视区）原点
+	rect.OffsetRect(-rect.Width() / 2, -rect.Height() / 2);//客户区矩形矫正
+	dc.MoveTo(0, 0); dc.LineTo(500, 0);//{画出坐标轴}
+	dc.MoveTo(0, 0); dc.LineTo(0, 300);
+	dc.MoveTo(0, 0); dc.LineTo(-250, -250);
+	dc.MoveTo(-10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(485, 10); dc.LineTo(500, 0);
+	dc.MoveTo(485, -10); dc.LineTo(500, 0);
+	dc.MoveTo(-250, -250); dc.LineTo(-250, -230);
+	dc.MoveTo(-250, -250); dc.LineTo(-230, -250);
+
+	CPen NewPen, *P01Pen;//设置新画笔
+	NewPen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));//设置画笔属性
+	P01Pen = dc.SelectObject(&NewPen);//应用新画笔
+
+
 	CPen pen1, pen2;
 	pen1.CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 	pen2.CreatePen(PS_SOLID, 2, RGB(0, 0, 255));//粗度为2，由黑色变为蓝色
@@ -1126,6 +1270,29 @@ void ChuituView::Onduichen3()
 {
 	// TODO: 在此添加命令处理程序代码
 	CClientDC dc(this);
+
+	CRect rect;
+	GetClientRect(&rect);
+	dc.SetMapMode(MM_ANISOTROPIC);//设置映射模式
+	dc.SetWindowExt(rect.Width(), rect.Height());//设置窗口范围
+	dc.SetViewportExt(rect.Width(), -rect.Height());//设置窗视区范围
+	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);//设置客户区中心为坐标轴（视区）原点
+	rect.OffsetRect(-rect.Width() / 2, -rect.Height() / 2);//客户区矩形矫正
+	dc.MoveTo(0, 0); dc.LineTo(500, 0);//{画出坐标轴}
+	dc.MoveTo(0, 0); dc.LineTo(0, 300);
+	dc.MoveTo(0, 0); dc.LineTo(-250, -250);
+	dc.MoveTo(-10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(485, 10); dc.LineTo(500, 0);
+	dc.MoveTo(485, -10); dc.LineTo(500, 0);
+	dc.MoveTo(-250, -250); dc.LineTo(-250, -230);
+	dc.MoveTo(-250, -250); dc.LineTo(-230, -250);
+
+	CPen NewPen, *P01Pen;//设置新画笔
+	NewPen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));//设置画笔属性
+	P01Pen = dc.SelectObject(&NewPen);//应用新画笔
+
+
 	CPen pen1, pen2;
 	pen1.CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 	pen2.CreatePen(PS_SOLID, 2, RGB(0, 0, 255));//粗度为2，由黑色变为蓝色
@@ -1172,6 +1339,29 @@ void ChuituView::Onbili3()
 {
 	// TODO: 在此添加命令处理程序代码
 	CClientDC dc(this);
+
+	CRect rect;
+	GetClientRect(&rect);
+	dc.SetMapMode(MM_ANISOTROPIC);//设置映射模式
+	dc.SetWindowExt(rect.Width(), rect.Height());//设置窗口范围
+	dc.SetViewportExt(rect.Width(), -rect.Height());//设置窗视区范围
+	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);//设置客户区中心为坐标轴（视区）原点
+	rect.OffsetRect(-rect.Width() / 2, -rect.Height() / 2);//客户区矩形矫正
+	dc.MoveTo(0, 0); dc.LineTo(500, 0);//{画出坐标轴}
+	dc.MoveTo(0, 0); dc.LineTo(0, 300);
+	dc.MoveTo(0, 0); dc.LineTo(-250, -250);
+	dc.MoveTo(-10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(485, 10); dc.LineTo(500, 0);
+	dc.MoveTo(485, -10); dc.LineTo(500, 0);
+	dc.MoveTo(-250, -250); dc.LineTo(-250, -230);
+	dc.MoveTo(-250, -250); dc.LineTo(-230, -250);
+
+	CPen NewPen, *P01Pen;//设置新画笔
+	NewPen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));//设置画笔属性
+	P01Pen = dc.SelectObject(&NewPen);//应用新画笔
+
+
 	CPen pen1, pen2;
 	pen1.CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 	pen2.CreatePen(PS_SOLID, 2, RGB(0, 0, 255));//粗度为2，由黑色变为蓝色
@@ -1216,6 +1406,29 @@ void ChuituView::Oncuoqie3()
 {
 	// TODO: 在此添加命令处理程序代码
 	CClientDC dc(this);
+
+	CRect rect;
+	GetClientRect(&rect);
+	dc.SetMapMode(MM_ANISOTROPIC);//设置映射模式
+	dc.SetWindowExt(rect.Width(), rect.Height());//设置窗口范围
+	dc.SetViewportExt(rect.Width(), -rect.Height());//设置窗视区范围
+	dc.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);//设置客户区中心为坐标轴（视区）原点
+	rect.OffsetRect(-rect.Width() / 2, -rect.Height() / 2);//客户区矩形矫正
+	dc.MoveTo(0, 0); dc.LineTo(500, 0);//{画出坐标轴}
+	dc.MoveTo(0, 0); dc.LineTo(0, 300);
+	dc.MoveTo(0, 0); dc.LineTo(-250, -250);
+	dc.MoveTo(-10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(10, 285); dc.LineTo(0, 300);
+	dc.MoveTo(485, 10); dc.LineTo(500, 0);
+	dc.MoveTo(485, -10); dc.LineTo(500, 0);
+	dc.MoveTo(-250, -250); dc.LineTo(-250, -230);
+	dc.MoveTo(-250, -250); dc.LineTo(-230, -250);
+
+	CPen NewPen, *P01Pen;//设置新画笔
+	NewPen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));//设置画笔属性
+	P01Pen = dc.SelectObject(&NewPen);//应用新画笔
+
+
 	CPen pen1, pen2;
 	pen1.CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 	pen2.CreatePen(PS_SOLID, 2, RGB(0, 0, 255));//粗度为2，由黑色变为蓝色
@@ -1253,6 +1466,11 @@ void ChuituView::Onsanshitu()
 {
 	// TODO: 在此添加命令处理程序代码
 	CDC* pDC = GetDC();
+	CRect rect;//定义矩形
+	GetClientRect(&rect);//获得客户区大小
+	
+	Axis(pDC, rect);
+
 	int a[10][4] = { {0,0,0,1},{0,0,2,1},{1,0,2,1},{1,0,0,1},{0,1,0,1},{0,1,1,1},{0,1,2,1},{1,1,2,1},{1,2,1,1},{1,2,0,1} };
 	int T1[4][4] = { {1,0,0,0},{0,1,0,0},{0,0,0,0},{0,0,0,1} };
 	int T2[4][4] = { {0,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1} };
@@ -1471,9 +1689,3 @@ void ChuituView::Onsanshitu()
 	pDC->LineTo(d[9][0] * 50 * 2, d[9][1] * 50 * 2);
 
 }
-
-
-
-
-
-
